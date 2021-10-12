@@ -1,5 +1,6 @@
 from random import random
-
+from sys import setswitchinterval
+from distance import get_distance_wgs84
 
 class Region:
     MAX = 0.0001
@@ -9,6 +10,15 @@ class Region:
         self.posV = args[0][1]
         self.spanH = -args[1][0]+args[0][0]
         self.spanV = args[1][1]-args[0][1]
+
+    def verify(self, args):
+        previous = (0, 0)
+        for point in args:
+            print(point[0],point[1],get_distance_wgs84(previous[1],previous[0],point[1],point[0]))
+            if get_distance_wgs84(previous[1],previous[0],point[1],point[0])<15:
+                return False
+            previous = point
+        return True
 
     def shuffleFix(self):
         self.FIXH = self.MAX*(random()-0.5)
@@ -29,20 +39,21 @@ class Region:
 
     def getDivision(self, num):
         result = []
-        footstep = [0]*4
         ave = num//4
-        footstep[0] = +self.spanV/ave
-        footstep[1] = -self.spanH/ave
-        footstep[2] = -self.spanV/ave
-        footstep[3] = +self.spanH/ave
+        switch={0:(self.posV+self.spanV)/ave,1:(self.posH-self.spanH)/ave,2:(self.posV)/ave,3:(self.posH)/ave}
         self.shuffleFix()
         now = [self.posH+self.FIXH, self.posV+self.FIXV]
         now = list(self.keepInBound(now))
         for i in range(num):
             result.append([now[0], now[1]])
             self.shuffleFix()
-            now[0] += (i//ave % 2)*footstep[i//ave]+self.FIXH
-            now[1] += (not i//ave % 2)*footstep[i//ave]+self.FIXV
+            if i % ave==0:
+                footstep=switch[i / ave]-now[not i / ave % 2] / ave
+            now[0] += (i//ave % 2)*footstep+self.FIXH
+            now[1] += (not i//ave % 2)*footstep+self.FIXV
             now = list(self.keepInBound(now))
-        return result
+        if self.verify(result):
+            return result
+        else:
+            return self.getDivision(num)
 # 下一步计划区域脱出保护机制

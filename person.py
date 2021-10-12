@@ -1,3 +1,3 @@
 class Person:
-    speed=2.6
-    
+    def __init__(self, speed):
+        self.speed=speed
