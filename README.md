@@ -1,7 +1,7 @@
 # running
 ### 基于手机模拟器虚拟定位实现自动跑圈
 ### 手机模拟器需求
-- nox模拟器 [https://www.bignox.com/en/download/fullPackage?beta]"点此下载"
+- nox模拟器 [点此下载](https://www.bignox.com/en/download/fullPackage?beta)
 ### 需求python依赖模块（已打包为exe，无需手动编译）
 - pyautogoi
 - keyboard
