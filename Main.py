@@ -1,4 +1,5 @@
 import json
+import os
 from divide import Region
 from control import Control
 from person import Person
@@ -55,7 +56,9 @@ if __name__ == '__main__':
             previous = point
         if flag:
             print('error')
-    with open('./config.json', 'r', encoding='utf8')as fp:
+
+    path = os.environ['runhome']
+    with open('%s\config.json' % path, 'r', encoding='utf8')as fp:
         config = json.load(fp)
     print(config['keymap']['start'], ':start')
     print(config['keymap']['test'], ':test')

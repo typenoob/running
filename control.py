@@ -1,4 +1,5 @@
 import pyautogui as pg
+import os
 
 
 class Control:
@@ -15,4 +16,5 @@ class Control:
         pg.press("tab", presses=9)
 
     def finish():
-        pg.click()
+        path = os.environ['runhome']
+        pg.click('%s\\finish.png' % path)
